@@ -6,7 +6,7 @@
 class Moinho : public Objeto
 {
 public:
-    float animacao;
+    double animacao;
     Moinho();
     void desenha();
     void moinho();
@@ -14,7 +14,7 @@ public:
     void desenha_caixa();
     void desenha_base();
     void desenha_bico();
-    float proxima_animacao();
+    void proxima_animacao();
 };
 
 #endif // MOINHO_H
