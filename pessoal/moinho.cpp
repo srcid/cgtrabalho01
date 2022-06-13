@@ -67,7 +67,7 @@ void Moinho::desenha_helices() {
     glTranslatef(0.25,0.25,1);
     glTranslatef(0,0,0.25);
     glScalef(0.5,1.5,0.01);
-    desenha_caixa();
+    this->desenha_caixa();
     glPopMatrix();
 
     // hélice da esquerda
@@ -78,7 +78,7 @@ void Moinho::desenha_helices() {
     glTranslatef(0.5,0,0);
     glRotatef(90, 0, 0, 1);
     glScalef(0.5,1.5,0.01);
-    desenha_caixa();
+    this->desenha_caixa();
     glPopMatrix();
 
     // hélice da direita
@@ -89,7 +89,7 @@ void Moinho::desenha_helices() {
     glTranslatef(0,0.5,0);
     glRotatef(-90, 0, 0, 1);
     glScalef(0.5,1.5,0.01);
-    desenha_caixa();
+    this->desenha_caixa();
     glPopMatrix();
 
     // hélice de baixo
@@ -100,7 +100,7 @@ void Moinho::desenha_helices() {
     glTranslatef(0.5,0,0);
     glRotatef(180,0,0,1);
     glScalef(0.5,1.5,0.01);
-    desenha_caixa();
+    this->desenha_caixa();
     glPopMatrix();
 }
 
@@ -110,7 +110,7 @@ void Moinho::desenha_bico() {
     glTranslatef(-0.25,3,-0.25);
     glTranslatef(0.25,0.25,1);
     glScalef(0.5,0.5,0.5);
-    desenha_caixa();
+    this->desenha_caixa();
     glPopMatrix();
 }
 
@@ -119,18 +119,19 @@ void Moinho::desenha_base() {
     // tronco
     glPushMatrix();
     glScalef(0.5,3,0.5);
-    desenha_caixa();
+    this->desenha_caixa();
     glPopMatrix();
 
     // cabeça
     glPushMatrix();
     glTranslatef(-0.25,3,-0.25);
-    desenha_caixa();
+    this->desenha_caixa();
     glPopMatrix();
 
     desenha_bico();
     desenha_helices();
 
+    this->proxima_animacao();
 }
 
 void Moinho::desenha() {
