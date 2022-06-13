@@ -4,9 +4,9 @@ Moinho::Moinho() {
     this->animacao = 0;
 }
 
-float Moinho::proxima_animacao() {
+void Moinho::proxima_animacao() {
     if (animacao > 360) animacao = 0;
-    return animacao++;
+    animacao += 1.0;
 }
 
 void Moinho::desenha_caixa() {
