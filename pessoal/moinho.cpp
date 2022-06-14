@@ -1,12 +1,12 @@
 #include <moinho.h>
 
 Moinho::Moinho() {
-    this->animacao = 0;
+    this->animacao = 0.0;
 }
 
 void Moinho::proxima_animacao() {
-    if (animacao > 360) animacao = 0;
-    animacao += 1.0;
+    if (animacao > 359) animacao = 0;
+    animacao += 0.25;
 }
 
 void Moinho::desenha_caixa() {
@@ -61,45 +61,36 @@ void Moinho::desenha_caixa() {
 }
 
 void Moinho::desenha_helices() {
-    //hélice de cima
+
     glPushMatrix();
-    glTranslatef(-0.25,3,-0.25);
-    glTranslatef(0.25,0.25,1);
-    glTranslatef(0,0,0.25);
-    glScalef(0.5,1.5,0.01);
+    glTranslatef(0.25,3.5,0.75);
+    glRotatef(this->animacao, 0,0,1);
+    glTranslatef(-0.5,-0.5,0);
+    glScalef(0.5,3,0.01);
     this->desenha_caixa();
     glPopMatrix();
 
-    // hélice da esquerda
     glPushMatrix();
-    glTranslatef(-0.25,3,-0.25);
-    glTranslatef(0.25,0.25,1);
-    glTranslatef(0,0,0.25);
-    glTranslatef(0.5,0,0);
-    glRotatef(90, 0, 0, 1);
-    glScalef(0.5,1.5,0.01);
+    glTranslatef(0.25,3.5,0.75);
+    glRotatef(this->animacao + 90, 0,0,1);
+    glTranslatef(-0.5,-0.5,0);
+    glScalef(0.5,3,0.01);
     this->desenha_caixa();
     glPopMatrix();
 
-    // hélice da direita
     glPushMatrix();
-    glTranslatef(-0.25,3,-0.25);
-    glTranslatef(0.25,0.25,1);
-    glTranslatef(0,0,0.25);
-    glTranslatef(0,0.5,0);
-    glRotatef(-90, 0, 0, 1);
-    glScalef(0.5,1.5,0.01);
+    glTranslatef(0.25,3.5,0.75);
+    glRotatef(this->animacao + 180, 0,0,1);
+    glTranslatef(-0.5,-0.5,0);
+    glScalef(0.5,3,0.01);
     this->desenha_caixa();
     glPopMatrix();
 
-    // hélice de baixo
     glPushMatrix();
-    glTranslatef(-0.25,3.5,-0.25);
-    glTranslatef(0.25,0.25,1);
-    glTranslatef(0,0,0.25);
-    glTranslatef(0.5,0,0);
-    glRotatef(180,0,0,1);
-    glScalef(0.5,1.5,0.01);
+    glTranslatef(0.25,3.5,0.75);
+    glRotatef(this->animacao + 270, 0,0,1);
+    glTranslatef(-0.5,-0.5,0);
+    glScalef(0.5,3,0.01);
     this->desenha_caixa();
     glPopMatrix();
 }
@@ -107,15 +98,15 @@ void Moinho::desenha_helices() {
 void Moinho::desenha_bico() {
     // bico
     glPushMatrix();
-    glTranslatef(-0.25,3,-0.25);
-    glTranslatef(0.25,0.25,1);
+    glTranslatef(0.25,3.5,0.75);
     glScalef(0.5,0.5,0.5);
+    glRotatef(this->animacao, 0,0,1);
+    glTranslatef(-0.5,-0.5,0);
     this->desenha_caixa();
     glPopMatrix();
 }
 
 void Moinho::desenha_base() {
-
     // tronco
     glPushMatrix();
     glScalef(0.5,3,0.5);
