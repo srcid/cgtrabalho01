@@ -23,7 +23,9 @@ SOURCES += main.cpp \
     pessoal/personagem.cpp \
     pessoal/objeto.cpp \
     pessoal/carro.cpp \
-    pessoal/novoobjeto.cpp
+    pessoal/novoobjeto.cpp \
+    pessoal/porco.cpp \
+    pessoal/vaca.cpp
 
 HEADERS += \
     bib/Camera.h \
@@ -39,4 +41,6 @@ HEADERS += \
     pessoal/personagem.h \
     pessoal/objeto.h \
     pessoal/carro.h \
-    pessoal/novoobjeto.h
+    pessoal/novoobjeto.h \
+    pessoal/porco.h \
+    pessoal/vaca.h
