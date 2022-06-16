@@ -154,9 +154,26 @@ void teclado(unsigned char key, int x, int y) {
             objetos[posSelecionado]->selecionado = true;
         }
         break;
-
-
+    case 'm':
+        if (posSelecionado >= 0 && posSelecionado < objetos.size() && !objetos.empty()) {
+            objetos[posSelecionado]->mostrarOrigem();
+        }
+        break;
+    case 'r':
+        if (objetos.size() > 0) {
+            cout << "removou o último" << endl;
+            objetos.pop_back();
+        }
+        break;
+    case 'd':
+        if (posSelecionado >= 0 && posSelecionado < objetos.size() && !objetos.empty()) {
+            cout << "removeu " + posSelecionado << endl;
+            objetos.erase(objetos.begin()+posSelecionado);
+            posSelecionado = -1;
+        }
+        break;
     case 'O':
+        cout << "inserção" << endl;
         incluirObjeto = !incluirObjeto;
         break;
     case 'p':
