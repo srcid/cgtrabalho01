@@ -12,6 +12,10 @@ public:
     void desenha_caixa();
     void desenha();
     void proxima_animacao();
+    void desenha_pes();
+    void desenha_pernas();
+    void desenha_corpo();
+    void desenha_pescoco();
 };
 
 #endif // VACA_H

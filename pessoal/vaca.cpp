@@ -7,7 +7,7 @@ Vaca::Vaca()
 
 void Vaca::proxima_animacao() {
     static double factor = 1;
-    if (this->animacao > 30 || this->animacao < 0) {
+    if (this->animacao > 45 || this->animacao < 0) {
         factor *= -1;
     }
     this->animacao = this->animacao + factor * 0.1;
@@ -38,7 +38,7 @@ void Vaca::desenha() {
     glPopMatrix();
 }
 
-void Vaca::vaca() {
+void Vaca::desenha_pes() {
     /* pes */
     glPushMatrix();
     GUI::setColor(0,0,0);
@@ -60,7 +60,9 @@ void Vaca::vaca() {
     this->desenha_caixa();
     glPopMatrix();
     /* fim pes */
+}
 
+void Vaca::desenha_pernas() {
     /* pernas */
     glPushMatrix();
     GUI::setColor(1,1,1);
@@ -83,27 +85,37 @@ void Vaca::vaca() {
     this->desenha_caixa();
     glPopMatrix();
     /* fim pernas */
+}
 
+void Vaca::desenha_corpo() {
     // corpo
     glPushMatrix();
     glScalef(4,2,6);
     glTranslatef(0,1,0);
     this->desenha_caixa();
     glPopMatrix();
+}
 
+void Vaca::desenha_pescoco() {
     // pescoço
     glPushMatrix();
-    glTranslatef(1,3,4);
+    glTranslatef(2,4,5);
+    glRotatef(this->animacao, 1,0,0);
     glScalef(2,4,2);
+    glTranslatef(-0.5,-0.5,-0.5);
     this->desenha_caixa();
-    glPopMatrix();
 
-    // cabeça
-    glPushMatrix();
-    glTranslatef(1, 5, 6);
-    glScalef(2,2,2);
+    glTranslatef(0,0.5,1);
+    glScalef(1,0.5,1);
     this->desenha_caixa();
     glPopMatrix();
+}
+
+void Vaca::vaca() {
+    this->desenha_pes();
+    this->desenha_pernas();
+    this->desenha_corpo();
+    this->desenha_pescoco();
 
     proxima_animacao();
 }
@@ -117,7 +129,7 @@ void Vaca::desenha_caixa() {
         glVertex3f(1,1,1);
         glVertex3f(0,1,1);
     glEnd();
-    //face tras
+    //face trás
     glBegin(GL_QUADS);
         glNormal3f(0,0,-1);
         glVertex3f(0,0,0);
