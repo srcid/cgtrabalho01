@@ -5,6 +5,8 @@
 #include <carro.h>
 #include <novoobjeto.h>
 #include <moinho.h>
+#include <porco.h>
+#include <vaca.h>
 
 using namespace std;
 
@@ -46,7 +48,7 @@ void displayInner() {
     GUI::setColor(1,0,0);
     GUI::drawFloor();
 
-    for (int i = 0; i < objetos.size(); ++i) {
+    for (size_t i = 0; i < objetos.size(); ++i) {
         glPushMatrix();
             objetos[i]->desenha();
         glPopMatrix();
@@ -181,6 +183,16 @@ void teclado(unsigned char key, int x, int y) {
     case 'M':
         if (incluirObjeto) {
             objetos.push_back(new Moinho());
+        }
+        break;
+    case 'P':
+        if (incluirObjeto) {
+            objetos.push_back(new Porco());
+        }
+        break;
+    case 'V':
+        if (incluirObjeto) {
+            objetos.push_back(new Vaca());
         }
         break;
 //    case 'i':
