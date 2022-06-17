@@ -7,7 +7,7 @@ Vaca::Vaca()
 
 void Vaca::proxima_animacao() {
     static double factor = 1;
-    if (this->animacao > 45 || this->animacao < 0) {
+    if (this->animacao > 60 || this->animacao < 0) {
         factor *= -1;
     }
     this->animacao = this->animacao + factor * 0.1;
@@ -90,8 +90,15 @@ void Vaca::desenha_pernas() {
 void Vaca::desenha_corpo() {
     // corpo
     glPushMatrix();
-    glScalef(4,2,6);
-    glTranslatef(0,1,0);
+    glTranslatef(0,2,0);
+    glScalef(4,3,6);
+    this->desenha_caixa();
+    glPopMatrix();
+}
+
+void Vaca::desenha_cabeca() {
+    glTranslatef(0,0.5,1);
+    glScalef(1,0.5,1);
     this->desenha_caixa();
     glPopMatrix();
 }
@@ -99,16 +106,12 @@ void Vaca::desenha_corpo() {
 void Vaca::desenha_pescoco() {
     // pescoço
     glPushMatrix();
-    glTranslatef(2,4,5);
+    glTranslatef(2,4.5,5);
     glRotatef(this->animacao, 1,0,0);
     glScalef(2,4,2);
     glTranslatef(-0.5,-0.5,-0.5);
     this->desenha_caixa();
-
-    glTranslatef(0,0.5,1);
-    glScalef(1,0.5,1);
-    this->desenha_caixa();
-    glPopMatrix();
+    this->desenha_cabeca();
 }
 
 void Vaca::vaca() {

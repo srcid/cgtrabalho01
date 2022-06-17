@@ -16,6 +16,7 @@ public:
     void desenha_pernas();
     void desenha_corpo();
     void desenha_pescoco();
+    void desenha_cabeca();
 };
 
 #endif // VACA_H
