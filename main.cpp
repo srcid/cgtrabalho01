@@ -80,7 +80,7 @@ void desenha() {
     }
 
 
-    if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+    if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
         objetos[posSelecionado]->t.x += glutGUI::dtx;
         objetos[posSelecionado]->t.y += glutGUI::dty;
         objetos[posSelecionado]->t.z += glutGUI::dtz;
@@ -133,29 +133,29 @@ void teclado(unsigned char key, int x, int y) {
         break;
 
     case 'n':
-        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = false;
         }
         posSelecionado++;
         posSelecionado = posSelecionado%objetos.size();
-        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = true;
         }
         break;
     case 'b':
-        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = false;
         }
         posSelecionado--;
         if (posSelecionado < 0) {
             posSelecionado = objetos.size()-1;
         }
-        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = true;
         }
         break;
     case 'm':
-        if (posSelecionado >= 0 && posSelecionado < objetos.size() && !objetos.empty()) {
+        if (posSelecionado >= 0 && posSelecionado < (int)objetos.size() && !objetos.empty()) {
             objetos[posSelecionado]->mostrarOrigem();
         }
         break;
@@ -166,7 +166,7 @@ void teclado(unsigned char key, int x, int y) {
         }
         break;
     case 'd':
-        if (posSelecionado >= 0 && posSelecionado < objetos.size() && !objetos.empty()) {
+        if (posSelecionado >= 0 && posSelecionado < (int)objetos.size() && !objetos.empty()) {
             cout << "removeu " + posSelecionado << endl;
             objetos.erase(objetos.begin()+posSelecionado);
             posSelecionado = -1;
@@ -247,7 +247,7 @@ void teclado(unsigned char key, int x, int y) {
 
 int main()
 {
-    GUI gui = GUI(800,600,desenha,teclado);
+    GUI gui = GUI(1080,720,desenha,teclado);
 }
 
 
