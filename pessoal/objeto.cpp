@@ -2,7 +2,6 @@
 
 Objeto::Objeto()
 {
-
 }
 
 void Objeto::desenha()
@@ -18,4 +17,13 @@ void Objeto::desenha()
 
 void Objeto::mostrarOrigem() {
     this->isOriginVisible = !this->isOriginVisible;
+}
+
+string Objeto::toString()  {
+    return this->tipo + "," +
+            to_string(this->t.x) + "," + to_string(this->t.y) + "," + to_string(this->t.z) + "," +
+            to_string(this->a.x) + "," + to_string(this->a.y) + "," + to_string(this->a.z) + "," +
+            to_string(this->s.x) + "," + to_string(this->s.y) + "," + to_string(this->s.z) + "," +
+            to_string(this->isOriginVisible) + "," +
+            to_string(this->selecionado) + "\n";
 }
