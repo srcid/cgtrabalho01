@@ -206,26 +206,6 @@ void desenha() {
         objetos[posSelecionado]->s.y += glutGUI::dsy;
         objetos[posSelecionado]->s.z += glutGUI::dsz;
     }
-//    glutGUI::dtx = 0.0; glutGUI::dty = 0.0; glutGUI::dtz = 0.0;
-//    glutGUI::dax = 0.0; glutGUI::day = 0.0; glutGUI::daz = 0.0;
-//    glutGUI::dsx = 0.0; glutGUI::dsy = 0.0; glutGUI::dsz = 0.0;
-
-    //objeto transformado
-    //glPushMatrix();
-//        glTranslatef(glutGUI::tx,glutGUI::ty,glutGUI::tz);
-//        glRotatef(glutGUI::az,0,0,1);
-//        glRotatef(glutGUI::ay,0,1,0);
-//        glRotatef(glutGUI::ax,1,0,0);
-//        GUI::drawOrigin(1);
-//        glScalef(glutGUI::sx,glutGUI::sy,glutGUI::sz);
-//        GUI::setColor(0,0,1);
-//        //GUI::drawBox(0,0,0, 1,1,1);
-//        //GUI::drawBox(1,1,0, 2,2,1);
-//        //casa();
-//        //personagem();
-//        //GUI::draw3ds(model3ds);
-
-    //glPopMatrix();
 
     GUI::displayEnd();
 }
@@ -238,6 +218,24 @@ void teclado(unsigned char key, int x, int y) {
     }
 
     switch (key) {
+    case '0':                            // olho, camera, up
+        glutGUI::cam = new CameraDistante(0.01,25,0.01, 0,0,0, 0,1,0);
+        break;
+    case '9':
+        glutGUI::cam = new CameraDistante(-9,9,9, 0,0,0, 0,1,0);
+        break;
+    case '8':
+        glutGUI::cam = new CameraDistante(9,9,9, 0,0,0, 0,1,0);
+        break;
+    case '6':
+        glutGUI::cam = new CameraDistante(9,9,-9, 0,0,0, 0,1,0);
+        break;
+    case '5':
+        glutGUI::cam = new CameraDistante(-9,9,-9, 0,0,0, 0,1,0);
+        break;
+    case '4':
+        glutGUI::cam = new CameraDistante(5,5,5, 0,0,0, 0,1,0);
+        break;
     case 't':
         glutGUI::trans_obj = !glutGUI::trans_obj;
         break;
@@ -260,7 +258,6 @@ void teclado(unsigned char key, int x, int y) {
             objetos[posSelecionado]->selecionado = false;
         }
         posSelecionado--;
-        posSelecionado = posSelecionado%objetos.size();
         posSelecionado = posSelecionado%objetos.size();
         if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = true;
@@ -303,7 +300,7 @@ void teclado(unsigned char key, int x, int y) {
         }
         break;
     case 'O':
-        cout << (incluirObjeto ? "modo inserção iniciado" : "modo inserção desligado") << endl;
+        cout << (incluirObjeto ? "modo inserção desligado" : "modo inserção iniciado") << endl;
         incluirObjeto = !incluirObjeto;
         break;
     case 'M':
@@ -379,9 +376,3 @@ int main()
 {
     GUI gui = GUI(2000,1000,desenha,teclado);
 }
-
-
-//while(true) {
-//    desenha();
-//    interacaoUsuario();
-//}
