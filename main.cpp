@@ -143,15 +143,23 @@ Vetor3D transformedPoint(Vetor3D p)
     return res3D;
 }
 
+double animacao_sol = 0;
+
 void displayInner() {
+    if (animacao_sol > 360) animacao_sol = 0;
+    else animacao_sol += 0.1;
+    glPushMatrix();
+    glRotatef(animacao_sol, 1,0,0);
     GUI::setLight(1,1,3,5,true,false);
+    glPopMatrix();
     GUI::setLight(2,-1.5,0.5,-1,true,false);
     //GUI::setLight(3,-5,3,5,true,false);
 
     GUI::drawOrigin(1);
-
-    GUI::setColor(1,0,0);
-    GUI::drawFloor();
+    glClearColor(66/255.0, 194/255.0, 245/255.0, 0);
+    //GUI::setColor(1,0,0);
+    GUI::setColor(84/255.0, 245/255.0, 66/255.0);
+    GUI::drawFloor(10,10,0.3,0.3,10,10);
 
     for (size_t i = 0; i < objetos.size(); ++i) {
         glPushMatrix();
