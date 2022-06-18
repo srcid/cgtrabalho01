@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include <personagem.h>
 #include <casa.h>
 #include <carro.h>
@@ -7,6 +8,9 @@
 #include <moinho.h>
 #include <porco.h>
 #include <vaca.h>
+#include <arvore.h>
+#include <carroca.h>
+#include <homem.h>
 
 using namespace std;
 
