@@ -369,7 +369,7 @@ void teclado(unsigned char key, int x, int y) {
 
 int main()
 {
-    GUI gui = GUI(1080,720,desenha,teclado);
+    GUI gui = GUI(2000,1000,desenha,teclado);
 }
 
 
