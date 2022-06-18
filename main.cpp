@@ -17,6 +17,109 @@ using namespace std;
 vector<Objeto*> objetos;
 int posSelecionado = -1;
 
+using namespace std;
+
+vector<string> strSplit(string s) {
+    const string delimiter = ",";
+    string token;
+    size_t pos;
+    vector<string> arr;
+
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = s.substr(0, pos);
+        arr.push_back(token);
+        s.erase(0, pos + delimiter.length());
+    }
+    if (s.size() > 0) {
+        arr.push_back(s);
+    }
+
+    return arr;
+}
+
+void loadFromFile() {
+    const string fname = "objetos.txt";
+    ifstream file;
+    file.open(fname);
+
+    objetos.clear();
+
+    if (file.is_open()) {
+        string line;
+        string tipo;
+        float tx, ty, tz, ax, ay, az, sx, sy, sz;
+        bool isOriginVisible, selecionado;
+        vector<string> arr;
+
+        while (getline(file, line)) {
+            Objeto* obj = nullptr;
+            arr = strSplit(line);
+
+            tipo = arr[0];
+            tx = stof(arr[1]);
+            ty = stof(arr[2]);
+            tz = stof(arr[3]);
+            ax = stof(arr[4]);
+            ay = stof(arr[5]);
+            az = stof(arr[6]);
+            sx = stof(arr[7]);
+            sy = stof(arr[8]);
+            sz = stof(arr[9]);
+            isOriginVisible = stoi(arr[10]);
+            selecionado = stoi(arr[11]);
+
+            if (tipo == "porco") {
+                obj = new Porco();
+            } else if (tipo == "vaca") {
+                obj = new Vaca();
+            } else if (tipo == "moinho") {
+                obj = new Moinho();
+            } else if (tipo == "arvore") {
+                obj = new Arvore();
+            } else if (tipo == "homem") {
+                obj = new Homem();
+            } else if (tipo == "carroca") {
+                obj = new Carroca();
+            } else {
+                cout << "tipo inválido" << endl;
+                break;
+            }
+
+            obj->t.x = tx;
+            obj->t.y = ty;
+            obj->t.z = tz;
+            obj->a.x = ax;
+            obj->a.y = ay;
+            obj->a.z = az;
+            obj->s.x = sx;
+            obj->s.y = sy;
+            obj->s.z = sz;
+            obj->isOriginVisible = isOriginVisible;
+            obj->selecionado = selecionado;
+
+            objetos.push_back(obj);
+        }
+
+        file.close();
+    }
+}
+
+void saveToFile() {
+    const string fname = "objetos.txt";
+    ofstream file;
+    file.open(fname);
+
+    if (file.is_open()) {
+        for (auto e : objetos) {
+            file << (*e).toString();
+        }
+
+        file.close();
+    } else {
+        cout << "erro ao abrir o arquivo." << endl;
+    }
+}
+
 Vetor3D transformedPoint(Vetor3D p)
 {
     glMatrixMode(GL_MODELVIEW);
@@ -213,6 +316,11 @@ void teclado(unsigned char key, int x, int y) {
         if (incluirObjeto) {
             objetos.push_back(new Vaca());
         }
+    case '#':
+        loadFromFile();
+        break;
+    case '@':
+        saveToFile();
         break;
 //    case 'i':
 //        //glutGUI::tx = 0.0;
