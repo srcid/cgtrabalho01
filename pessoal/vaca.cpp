@@ -2,6 +2,7 @@
 
 Vaca::Vaca()
 {
+    this->tipo = "vaca";
     this->animacao = 0.0;
 }
 
@@ -32,7 +33,7 @@ void Vaca::desenha() {
         } else {
             GUI::setColor(1.0, 90.0/255.0, 172.0/255.0);
         }
-        glScalef(0.3,0.3,0.3);
+        glScalef(0.1,0.1,0.1);
         vaca();
 
     glPopMatrix();
@@ -41,7 +42,7 @@ void Vaca::desenha() {
 void Vaca::desenha_pes() {
     /* pes */
     glPushMatrix();
-    GUI::setColor(0,0,0);
+    if (!this->selecionado) GUI::setColor(0,0,0);
     this->desenha_caixa();
     glPopMatrix();
 
@@ -65,7 +66,7 @@ void Vaca::desenha_pes() {
 void Vaca::desenha_pernas() {
     /* pernas */
     glPushMatrix();
-    GUI::setColor(1,1,1);
+    if (!this->selecionado) GUI::setColor(1,1,1);
     glTranslatef(0,1,0);
     this->desenha_caixa();
     glPopMatrix();

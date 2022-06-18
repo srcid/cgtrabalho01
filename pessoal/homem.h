@@ -1,11 +1,14 @@
 #ifndef HOMEM_H
 #define HOMEM_H
 
+#include <objeto.h>
 
-class homem
+class Homem : public Objeto
 {
 public:
-    homem();
+    Homem();
+    Model3DS* model;
+    void desenha();
 };
 
 #endif // HOMEM_H

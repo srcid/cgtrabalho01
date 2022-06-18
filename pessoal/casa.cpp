@@ -2,6 +2,7 @@
 
 Casa::Casa()
 {
+    this->tipo = "casa";
 }
 
 void Casa::casa()

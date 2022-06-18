@@ -1,6 +1,7 @@
 #include <moinho.h>
 
 Moinho::Moinho() {
+    this->tipo = "moinho";
     this->animacao = 0.0;
 }
 
@@ -132,7 +133,7 @@ void Moinho::desenha() {
         if (selecionado) {
             GUI::setColor(1,0,0);
         } else {
-            GUI::setColor(1,1,0);
+            GUI::setColor(237/255.0, 237/255.0, 235/255.0);
         }
         moinho();
 

@@ -1,7 +1,7 @@
 #include <porco.h>
 
 Porco::Porco() {
-
+this->tipo = "porco";
 }
 
 void Porco::desenha() {
