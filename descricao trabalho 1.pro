@@ -18,7 +18,10 @@ SOURCES += main.cpp \
     bib/Vetor3D.cpp \
     gui_glut/extra.cpp \
     gui_glut/gui.cpp \
+    pessoal/arvore.cpp \
+    pessoal/carroca.cpp \
     pessoal/casa.cpp \
+    pessoal/homem.cpp \
     pessoal/moinho.cpp \
     pessoal/personagem.cpp \
     pessoal/objeto.cpp \
@@ -36,7 +39,10 @@ HEADERS += \
     bib/Vetor3D.h \
     gui_glut/extra.h \
     gui_glut/gui.h \
+    pessoal/arvore.h \
+    pessoal/carroca.h \
     pessoal/casa.h \
+    pessoal/homem.h \
     pessoal/moinho.h \
     pessoal/personagem.h \
     pessoal/objeto.h \
