@@ -247,6 +247,23 @@ void teclado(unsigned char key, int x, int y) {
             objetos[posSelecionado]->selecionado = true;
         }
         break;
+    case 'N':
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
+            objetos[posSelecionado]->selecionado = false;
+        }
+        posSelecionado--;
+        posSelecionado = posSelecionado%objetos.size();
+        posSelecionado = posSelecionado%objetos.size();
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
+            objetos[posSelecionado]->selecionado = true;
+        }
+        break;
+    case 'u':
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
+            objetos[posSelecionado]->selecionado = false;
+            posSelecionado = -1;
+        }
+        break;
     case 'b':
         if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = false;
