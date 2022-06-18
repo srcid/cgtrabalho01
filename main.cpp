@@ -295,29 +295,8 @@ void teclado(unsigned char key, int x, int y) {
         }
         break;
     case 'O':
-        cout << "inserção" << endl;
+        cout << (incluirObjeto ? "modo inserção iniciado" : "modo inserção desligado") << endl;
         incluirObjeto = !incluirObjeto;
-        break;
-    case 'p':
-        if (incluirObjeto) {
-            objetos.push_back( new Personagem() );
-        }
-        break;
-    case 'c':
-        if (incluirObjeto) {
-            objetos.push_back( new Carro() );
-        }
-        break;
-    case 'C':
-        if (incluirObjeto) {
-            objetos.push_back( new Casa() );
-        }
-        break;
-    case '4':
-        if (incluirObjeto) {
-            objetos.push_back( new novoObjeto() );
-            incluirObjeto = !incluirObjeto;
-        }
         break;
     case 'M':
         if (incluirObjeto) {
@@ -333,6 +312,22 @@ void teclado(unsigned char key, int x, int y) {
         if (incluirObjeto) {
             objetos.push_back(new Vaca());
         }
+        break;
+    case 'A':
+        if (incluirObjeto) {
+            objetos.push_back(new Arvore());
+        }
+        break;
+    case 'H':
+        if (incluirObjeto) {
+            objetos.push_back(new Homem());
+        }
+        break;
+    case 'C':
+        if (incluirObjeto) {
+            objetos.push_back(new Carroca());
+        }
+        break;
     case '#':
         loadFromFile();
         break;
