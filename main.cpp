@@ -14,8 +14,6 @@
 
 using namespace std;
 
-Model3DS model3ds("../3ds/cartest.3DS");
-
 vector<Objeto*> objetos;
 int posSelecionado = -1;
 
