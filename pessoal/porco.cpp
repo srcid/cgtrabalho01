@@ -13,7 +13,7 @@ void Porco::desenha() {
         } else {
             GUI::setColor(1.0, 90.0/255.0, 172.0/255.0);
         }
-        glScalef(0.1,0.1,0.1);
+        glScalef(0.08,0.08,0.08);
         porco();
 
     glPopMatrix();
