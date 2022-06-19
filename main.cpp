@@ -1,10 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <personagem.h>
-#include <casa.h>
-#include <carro.h>
-#include <novoobjeto.h>
 #include <moinho.h>
 #include <porco.h>
 #include <vaca.h>
@@ -147,13 +143,11 @@ double animacao_sol = 0;
 
 void displayInner() {
     if (animacao_sol > 360) animacao_sol = 0;
-    else animacao_sol += 0.1;
+    else animacao_sol += 0.05;
     glPushMatrix();
     glRotatef(animacao_sol, 1,0,0);
     GUI::setLight(1,1,3,5,true,false);
     glPopMatrix();
-    GUI::setLight(2,-1.5,0.5,-1,true,false);
-    //GUI::setLight(3,-5,3,5,true,false);
 
     GUI::drawOrigin(1);
     glClearColor(66/255.0, 194/255.0, 245/255.0, 0);
@@ -216,7 +210,6 @@ void teclado(unsigned char key, int x, int y) {
     if (!incluirObjeto) {
         GUI::keyInit(key,x,y);
     }
-
     switch (key) {
     case '0':                            // olho, camera, up
         glutGUI::cam = new CameraDistante(0.01,25,0.01, 0,0,0, 0,1,0);
@@ -242,22 +235,11 @@ void teclado(unsigned char key, int x, int y) {
     case 'l':
         glutGUI::trans_luz = !glutGUI::trans_luz;
         break;
-
     case 'n':
         if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = false;
         }
         posSelecionado++;
-        posSelecionado = posSelecionado%objetos.size();
-        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
-            objetos[posSelecionado]->selecionado = true;
-        }
-        break;
-    case 'N':
-        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
-            objetos[posSelecionado]->selecionado = false;
-        }
-        posSelecionado--;
         posSelecionado = posSelecionado%objetos.size();
         if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->selecionado = true;
@@ -282,7 +264,7 @@ void teclado(unsigned char key, int x, int y) {
         }
         break;
     case 'm':
-        if (posSelecionado >= 0 && posSelecionado < (int)objetos.size() && !objetos.empty()) {
+        if (posSelecionado >= 0 && posSelecionado < (int)objetos.size()) {
             objetos[posSelecionado]->mostrarOrigem();
         }
         break;
