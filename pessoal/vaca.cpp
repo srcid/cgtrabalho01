@@ -14,16 +14,6 @@ void Vaca::proxima_animacao() {
     this->animacao = this->animacao + factor * 0.1;
 }
 
-void desenha_chifre() {
-    glBegin(GL_POLYGON);
-    glVertex3f(0,0,0);
-    glVertex3f(6,0,0);
-    glVertex3f(6,0,6);
-    glVertex3f(4,0,2);
-    glVertex3f(0,0,2);
-    glEnd();
-}
-
 void Vaca::desenha() {
     glPushMatrix();
         Objeto::desenha(); // T.Rz.Ry.Rx.S. p
