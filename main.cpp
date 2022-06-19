@@ -33,8 +33,7 @@ vector<string> strSplit(string s) {
     return arr;
 }
 
-void loadFromFile() {
-    const string fname = "objetos.txt";
+void loadFromFile(const string fname = "objetos.txt") {
     ifstream file;
     file.open(fname);
 
@@ -320,6 +319,9 @@ void teclado(unsigned char key, int x, int y) {
         break;
     case '@':
         saveToFile();
+        break;
+    case '!':
+        loadFromFile("objetos_final.txt");
         break;
 //    case 'i':
 //        //glutGUI::tx = 0.0;
