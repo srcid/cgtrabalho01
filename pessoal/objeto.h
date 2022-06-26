@@ -12,8 +12,9 @@ public:
     bool isOriginVisible = false;
     bool selecionado = false;
     string tipo;
-public:
+
     Objeto();
+    virtual ~Objeto();
     virtual void desenha();
     void mostrarOrigem();
     string toString();

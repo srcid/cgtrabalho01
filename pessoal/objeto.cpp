@@ -4,6 +4,10 @@ Objeto::Objeto()
 {
 }
 
+Objeto::~Objeto()
+{
+}
+
 void Objeto::desenha()
 {
     // T.Rz.Ry.Rx.S (correspondente ao T'' da Q1 da lista 1)

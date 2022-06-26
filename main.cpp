@@ -270,12 +270,14 @@ void teclado(unsigned char key, int x, int y) {
     case 'r':
         if (objetos.size() > 0) {
             cout << "removou o último" << endl;
+            delete objetos.back();
             objetos.pop_back();
         }
         break;
     case 'd':
         if (posSelecionado >= 0 && posSelecionado < (int)objetos.size() && !objetos.empty()) {
             cout << "removeu " + posSelecionado << endl;
+            delete objetos[posSelecionado];
             objetos.erase(objetos.begin()+posSelecionado);
             posSelecionado = -1;
         }
