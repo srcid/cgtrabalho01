@@ -12,8 +12,8 @@ using namespace std;
 
 vector<Objeto*> objetos;
 int posSelecionado = -1;
-
-using namespace std;
+bool selecionadoMostrarSombra = false;
+bool pontual = false;
 
 vector<string> strSplit(string s) {
     const string delimiter = ",";
@@ -115,6 +115,70 @@ void saveToFile() {
     }
 }
 
+void mostraSombras( GLfloat plano[4], float lightPos[4] ) {
+    if (selecionadoMostrarSombra) {
+        bool aux = glutGUI::draw_eixos;
+        glutGUI::draw_eixos = false;
+
+        for (int i = 0; i < objetos.size(); i++) {
+            glDisable(GL_LIGHTING);
+            glColor4d(0.0,0.0,0.0, 0.5);
+
+            GLfloat sombra[4][4];
+
+            glPushMatrix();
+                GUI::shadowMatrix(sombra,plano,lightPos);
+                glMultTransposeMatrixf( (GLfloat*)sombra );
+
+                if ( objetos[i]->isShadowVisible ) {
+                    objetos[i]->desenha();
+                }
+
+                glEnable(GL_LIGHTING);
+            glPopMatrix();
+        }
+        glutGUI::draw_eixos = aux;
+    }
+}
+
+void gerarPlanosEMostrarSombras() {
+    float lightPos[4] = {glutGUI::lx,glutGUI::ly,glutGUI::lz,pontual};
+
+    GUI::setLight(0,lightPos[0],lightPos[1],lightPos[2],true,false,false,false,pontual);
+    GLfloat plano1[4] = {0,1,0, -0.001}; //chao
+    mostraSombras(plano1, lightPos);
+
+    GUI::setColor(1.0,1.0,0.0);
+    glPushMatrix();
+        glTranslatef(2,0,0);
+        glRotatef(90, 0,0,1);
+        glScalef(2,2,2);
+        GUI::drawQuad();
+    glPopMatrix();
+    GLfloat plano2[4] = {-1,0,0, 2.00-0.001}; // parede 1
+    mostraSombras(plano2, lightPos);
+
+    GUI::setColor(1.0,1.0,0.0);
+    glPushMatrix();
+        glTranslatef(0,0,2);
+        glRotatef(-90, 1,0,0);
+        glScalef(2,2,2);
+        GUI::drawQuad();
+    glPopMatrix();
+    GLfloat plano3[4] = {0,0,-1, 2.00-0.001}; // parede 2
+    mostraSombras(plano3, lightPos);
+
+    GUI::setColor(0.0,0.5,0.0);
+    glPushMatrix();
+        glTranslatef(1.5,0,0);
+        glRotatef(45, 0,0,1);
+        glScalef(2,2,2);
+        GUI::drawQuad();
+    glPopMatrix();
+    GLfloat plano4[4] = {-1,1,0, 1.50-0.001}; // plano inclinado
+    mostraSombras(plano4, lightPos);
+}
+
 Vetor3D transformedPoint(Vetor3D p)
 {
     glMatrixMode(GL_MODELVIEW);
@@ -153,6 +217,10 @@ void displayInner() {
     //GUI::setColor(1,0,0);
     GUI::setColor(84/255.0, 245/255.0, 66/255.0);
     GUI::drawFloor(10,10,0.3,0.3,10,10);
+
+    if (selecionadoMostrarSombra) {
+        gerarPlanosEMostrarSombras();
+    }
 
     for (size_t i = 0; i < objetos.size(); ++i) {
         glPushMatrix();
@@ -210,6 +278,12 @@ void teclado(unsigned char key, int x, int y) {
         GUI::keyInit(key,x,y);
     }
     switch (key) {
+    case 's':
+        selecionadoMostrarSombra = !selecionadoMostrarSombra;
+        break;
+    case 'p':
+        pontual = !pontual;
+        break;
     case '0':                            // olho, camera, up
         glutGUI::cam = new CameraDistante(0.01,25,0.01, 0,0,0, 0,1,0);
         break;

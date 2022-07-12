@@ -34,7 +34,8 @@ void GUI::GLUTInit()
 
 void GUI::GLInit()
 {
-    glClearColor(0.6,0.6,0.0,1.0); //define a cor para limpar a imagem (cor de fundo)
+    //glClearColor(0.6,0.6,0.0,1.0); //define a cor para limpar a imagem (cor de fundo)
+    glClearColor(0.8,0.8,0.8,1.0);
 
     glEnable(GL_LIGHTING); //habilita iluminacao (chamada no setLight)
     //glEnable(GL_COLOR_MATERIAL);
@@ -107,20 +108,7 @@ void GUI::displayInit()
     //viewport unica
     glViewport(0, 0, glutGUI::width, glutGUI::height);
         glLoadIdentity();
-
-        if (glutGUI::trans_luz) {
-            GUI::setColor(1,1,1);
-            glPushMatrix();
-                glTranslatef(-1,0.5,-3);
-                float s = 0.1;
-                glScalef(s,s,s);
-                GUI::drawBox(0,0,-0.2,1,1,-0.1);
-            glPopMatrix();
-        }
-
         gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
-        //gluLookAt(0,15,0, 0,0,0, 1,0,0);
-
 
     GUI::setLight(7,0,4,0,true,false,true);
 }
@@ -156,7 +144,12 @@ void GUI::setLight(int id, float posx, float posy, float posz, bool onOffKeyDefa
     glLightfv(GL_LIGHT0+id, GL_DIFFUSE,  light_diffuse);
     glLightfv(GL_LIGHT0+id, GL_SPECULAR, light_specular);
     //posicionando a luz
-    GLfloat light_position[] = { posx + glutGUI::lx, posy + glutGUI::ly, posz + glutGUI::lz, 1.0f }; //4o parametro: 0.0 - luz no infinito, 1.0 - luz pontual
+    GLfloat light_position[] = { posx + glutGUI::lx, posy + glutGUI::ly, posz + glutGUI::lz, 1.0f }; //4o parametro: 0.0 - luz no infinito, 1.0 - luz pontual próxima
+    if (glutGUI::hidden_light[id]) { //se for escondida, não movimenta com o mouse
+        light_position[0] = posx;
+        light_position[1] = posy;
+        light_position[2] = posz;
+    }
         if (!glutGUI::pontual_light[id]) light_position[3] = 0.0f;
     glLightfv(GL_LIGHT0+id, GL_POSITION, light_position);
     //desenha uma esfera representando a luz
@@ -165,12 +158,12 @@ void GUI::setLight(int id, float posx, float posy, float posz, bool onOffKeyDefa
         glColor4f(1.0,1.0,1.0,1.0);
         glPushMatrix();
             glTranslatef(light_position[0],light_position[1],light_position[2]);
-            glutSolidSphere(0.05,glutGUI::slices,glutGUI::stacks);
+            glutSolidSphere(0.02,glutGUI::slices,glutGUI::stacks);
         glPopMatrix();
         glEnable(GL_LIGHTING);
     }
     //desenha uma linha do (0,0,0) ate a posicao da luz
-    if (glutGUI::iluminacao && glutGUI::enabled_light[id] && glutGUI::trans_luz) {
+    if (glutGUI::iluminacao && glutGUI::enabled_light[id] && glutGUI::trans_luz && !glutGUI::hidden_light[id]) {
         glDisable(GL_LIGHTING);
         glColor4f(1.0,1.0,1.0,1.0);
         glBegin(GL_LINES);
@@ -310,6 +303,121 @@ void GUI::glReflectPlaneXYf()
                          };
     glMultTransposeMatrixd( transform );
 }
+
+
+
+//-------------------sombra-------------------
+
+//Create a matrix that will project the desired shadow
+//plano alinhado aos eixos principais
+void GUI::shadowMatrixYk(GLfloat shadowMat[4][4], GLfloat lightpos[4], GLfloat k)
+{
+    enum {X,Y,Z,W};
+
+    shadowMat[0][0] =  k*lightpos[W] - lightpos[Y];
+    shadowMat[0][1] =  lightpos[X];
+    shadowMat[0][2] =  0.0;
+    shadowMat[0][3] = -k*lightpos[X];
+
+    shadowMat[1][0] =  0.0;
+    shadowMat[1][1] =  k*lightpos[W];
+    shadowMat[1][2] =  0.0;
+    shadowMat[1][3] = -k*lightpos[Y];
+
+    shadowMat[2][0] =  0.0;
+    shadowMat[2][1] =  lightpos[Z];
+    shadowMat[2][2] =  k*lightpos[W] - lightpos[Y];
+    shadowMat[2][3] = -k*lightpos[Z];
+
+    shadowMat[3][0] =  0.0;
+    shadowMat[3][1] =  lightpos[W];
+    shadowMat[3][2] =  0.0;
+    shadowMat[3][3] = -lightpos[Y];
+
+    for (int i=0;i<4;i++)
+        for (int j=0;j<4;j++)
+            shadowMat[i][j] *= -1;
+}
+
+//Create a matrix that will project the desired shadow
+//plano arbitrario
+void GUI::shadowMatrix(GLfloat shadowMat[4][4], GLfloat groundplane[4], GLfloat lightpos[4])
+{
+    enum {X,Y,Z,W};
+    GLfloat dot;
+
+    /* Find dot product between light position vector and ground plane normal. */
+    dot = groundplane[X] * lightpos[X] +
+    groundplane[Y] * lightpos[Y] +
+    groundplane[Z] * lightpos[Z] +
+    groundplane[W] * lightpos[W];
+
+    shadowMat[0][0] = dot - lightpos[X] * groundplane[X];
+    shadowMat[0][1] = 0.f - lightpos[X] * groundplane[Y];
+    shadowMat[0][2] = 0.f - lightpos[X] * groundplane[Z];
+    shadowMat[0][3] = 0.f - lightpos[X] * groundplane[W];
+
+    shadowMat[1][0] = 0.f - lightpos[Y] * groundplane[X];
+    shadowMat[1][1] = dot - lightpos[Y] * groundplane[Y];
+    shadowMat[1][2] = 0.f - lightpos[Y] * groundplane[Z];
+    shadowMat[1][3] = 0.f - lightpos[Y] * groundplane[W];
+
+    shadowMat[2][0] = 0.f - lightpos[Z] * groundplane[X];
+    shadowMat[2][1] = 0.f - lightpos[Z] * groundplane[Y];
+    shadowMat[2][2] = dot - lightpos[Z] * groundplane[Z];
+    shadowMat[2][3] = 0.f - lightpos[Z] * groundplane[W];
+
+    shadowMat[3][0] = 0.f - lightpos[W] * groundplane[X];
+    shadowMat[3][1] = 0.f - lightpos[W] * groundplane[Y];
+    shadowMat[3][2] = 0.f - lightpos[W] * groundplane[Z];
+    shadowMat[3][3] = dot - lightpos[W] * groundplane[W];
+}
+
+//plano arbitrario
+//definindo pela equacao do plano
+void GUI::drawPlane(GLfloat planeABCD[4], float width, float height, float discrWidth, float discrHeight, float texWidth, float texHeight)
+{
+    //rotação do plano
+        //GUI::drawFloor desenha plano com normal = (0,1,0)
+        //rotação do plano deve transformar o vetor (0,1,0) no vetor n do plano
+        //(0,1,0).n = |(0,1,0)|.|n|.cos(angle)
+        Vetor3D n = Vetor3D(planeABCD[0], planeABCD[1], planeABCD[2]);
+        float cos = n.y / n.modulo(); //prodEscalar/(|n|.|(0,1,0)|)
+        Vetor3D axis = Vetor3D(0,1,0).prodVetorial(n);
+        glRotatef(acos(cos)*180./PI, axis.x,axis.y,axis.z); //glRotatef já normaliza axis
+    //distância do plano para a origem
+        //para um ponto qualquer p pertencente ao plano,
+        //p.n = |p|.|n|.cos(theta)
+        //dist = |p|.cos(theta) = p.n/|n| = xyz.ABC/|n| = -D/|n|
+        float dist = -planeABCD[3]/n.modulo();
+        glTranslatef(0.0,dist,0.0);
+    //desenha
+        GUI::drawFloor(width,height,discrWidth,discrHeight,texWidth,texHeight);
+}
+
+//plano arbitrario
+//definindo a equacao do plano de maneira mais intuitiva
+//  passando a direcao perpendicular ao plano (n não precisa estar normalizado, pois está sendo normalizado dentro)
+//  e a distancia minima do plano para a origem
+void GUI::drawPlane(Vetor3D n, GLfloat distMinPlanoOrigem, float width, float height, float discrWidth, float discrHeight, float texWidth, float texHeight)
+{
+    enum {X,Y,Z,W};
+    GLfloat dot;
+
+    GLfloat groundplane[4];
+    //normalizando o vetor normal do plano
+    n.normaliza();
+    groundplane[X] = n.x;
+    groundplane[Y] = n.y;
+    groundplane[Z] = n.z;
+    groundplane[W] = -distMinPlanoOrigem; //com a normal unitaria, D significa exatamente essa distancia, mas com sinal trocado (D=-k)
+
+    drawPlane(groundplane,width,height,discrWidth,discrHeight,texWidth,texHeight);
+}
+
+//-------------------sombra-------------------
+
+
 
 void GUI::drawSphere(float x, float y, float z, float radius)
 {
@@ -575,7 +683,7 @@ void GUI::drawFloor(float width, float height, float discrWidth, float discrHeig
     //Desenha::drawGrid( width/discr, 0, height/discr, discr );
 
     glPushMatrix();
-        glTranslated(0.,-0.0001,0.);
+        glTranslated(0.,-0.001,0.);
         drawQuad(width,height,discrWidth,discrHeight,texWidth,texHeight);
     glPopMatrix();
 

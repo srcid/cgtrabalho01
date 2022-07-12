@@ -11,12 +11,14 @@ public:
     Vetor3D s = Vetor3D(1,1,1);
     bool isOriginVisible = false;
     bool selecionado = false;
+    bool isShadowVisible = true;
     string tipo;
 
     Objeto();
     virtual ~Objeto();
     virtual void desenha();
     void mostrarOrigem();
+    void mostrarSombra();
     string toString();
 };
 

@@ -8,6 +8,10 @@ Objeto::~Objeto()
 {
 }
 
+void Objeto::mostrarSombra() {
+    this->isShadowVisible = !this->isShadowVisible;
+}
+
 void Objeto::desenha()
 {
     // T.Rz.Ry.Rx.S (correspondente ao T'' da Q1 da lista 1)
