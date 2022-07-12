@@ -33,6 +33,8 @@ public:
 
     static bool perspective;// = true;
 
+    static bool picking;// = false;
+
     static bool lbpressed;// = false;
     static bool mbpressed;// = false;
     static bool rbpressed;// = false;
@@ -109,7 +111,7 @@ public:
     static void autoCamMove(float value, Axis axis, int nIterations = 10);
     static void autoCamMotion(float value, Axis axis, int nIterations = 10);
     static void idle(void);
-    static void mouseButton(int button, int state, int x, int y);
+    static void defaultMouseButton(int button, int state, int x, int y);
     static void mouseMove(int x, int y);
 
     static void multGLMatrixByVector(float res[], float matriz[], float entr[]);

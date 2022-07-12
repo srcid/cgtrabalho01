@@ -12,6 +12,7 @@ using namespace std;
 
 vector<Objeto*> objetos;
 int posSelecionado = -1;
+size_t pontoSelecionado = 0;
 bool selecionadoMostrarSombra = false;
 bool pontual = false;
 
@@ -120,7 +121,7 @@ void mostraSombras( GLfloat plano[4], float lightPos[4] ) {
         bool aux = glutGUI::draw_eixos;
         glutGUI::draw_eixos = false;
 
-        for (int i = 0; i < objetos.size(); i++) {
+        for (size_t i = 0; i < objetos.size(); i++) {
             glDisable(GL_LIGHTING);
             glColor4d(0.0,0.0,0.0, 0.5);
 
@@ -141,33 +142,36 @@ void mostraSombras( GLfloat plano[4], float lightPos[4] ) {
     }
 }
 
-void gerarPlanosEMostrarSombras() {
-    float lightPos[4] = {glutGUI::lx,glutGUI::ly,glutGUI::lz,pontual};
+void mostrarSombrasNosPlanos() {
+    float lightPos[4] = {glutGUI::lx,glutGUI::ly,glutGUI::lz,pontual ? 1.0f : 0.0f};
 
     GUI::setLight(0,lightPos[0],lightPos[1],lightPos[2],true,false,false,false,pontual);
-    GLfloat plano1[4] = {0,1,0, -0.001}; //chao
+    GLfloat plano1[4] = {0,1,0, -0.001};
     mostraSombras(plano1, lightPos);
 
-    GUI::setColor(1.0,1.0,0.0);
+    // parede lateral
+    GUI::setColor(138.0/255, 89.0/255, 6.0/255);
     glPushMatrix();
         glTranslatef(2,0,0);
         glRotatef(90, 0,0,1);
         glScalef(2,2,2);
         GUI::drawQuad();
     glPopMatrix();
-    GLfloat plano2[4] = {-1,0,0, 2.00-0.001}; // parede 1
+    GLfloat plano2[4] = {-1,0,0, 2.00-0.001};
     mostraSombras(plano2, lightPos);
 
-    GUI::setColor(1.0,1.0,0.0);
+    // parede frontal
+    GUI::setColor(138.0/255, 89.0/255, 6.0/255);
     glPushMatrix();
         glTranslatef(0,0,2);
         glRotatef(-90, 1,0,0);
         glScalef(2,2,2);
         GUI::drawQuad();
     glPopMatrix();
-    GLfloat plano3[4] = {0,0,-1, 2.00-0.001}; // parede 2
+    GLfloat plano3[4] = {0,0,-1, 2.00-0.001};
     mostraSombras(plano3, lightPos);
 
+    // parede inclinada
     GUI::setColor(0.0,0.5,0.0);
     glPushMatrix();
         glTranslatef(1.5,0,0);
@@ -175,7 +179,7 @@ void gerarPlanosEMostrarSombras() {
         glScalef(2,2,2);
         GUI::drawQuad();
     glPopMatrix();
-    GLfloat plano4[4] = {-1,1,0, 1.50-0.001}; // plano inclinado
+    GLfloat plano4[4] = {-1,1,0, 1.50-0.001};
     mostraSombras(plano4, lightPos);
 }
 
@@ -219,7 +223,7 @@ void displayInner() {
     GUI::drawFloor(10,10,0.3,0.3,10,10);
 
     if (selecionadoMostrarSombra) {
-        gerarPlanosEMostrarSombras();
+        mostrarSombrasNosPlanos();
     }
 
     for (size_t i = 0; i < objetos.size(); ++i) {
@@ -229,7 +233,61 @@ void displayInner() {
     }
 }
 
-void desenha() {
+void desenhaComViewPorts() {
+    Vetor3D olho1, olho2, olho3;
+    Vetor3D centro1, centro2, centro3;
+    Vetor3D up1, up2, up3;
+
+    GUI::displayInit();
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glViewport(glutGUI::width/2, 0, glutGUI::width/2, glutGUI::height/2);
+    gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z,glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z,glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+    displayInner();
+
+    glLoadIdentity();
+    glViewport(0, glutGUI::height/2, glutGUI::width/2, glutGUI::height/2);
+    olho1 = Vetor3D(0, 10, 0);
+    centro1 = Vetor3D(0, 0, 0);
+    up1 = Vetor3D(0,0,1);
+    gluLookAt(olho1.x,olho1.y,olho1.z, centro1.x,centro1.y,centro1.z, up1.x,up1.y,up1.z);
+    displayInner();
+
+    glLoadIdentity();
+    glViewport(0, 0, glutGUI::width/2, glutGUI::height/2);
+    olho2 = Vetor3D(0, 1, 10);
+    centro2 = Vetor3D(0, 1, 0);
+    up2 = Vetor3D(0,1,0);
+    gluLookAt(olho2.x,olho2.y,olho2.z, centro2.x,centro2.y,centro2.z, up2.x,up2.y,up2.z);
+    displayInner();
+
+    glLoadIdentity();
+    glViewport(glutGUI::width/2, glutGUI::height/2, glutGUI::width/2, glutGUI::height/2);
+    olho3 = Vetor3D(10, 1, 0);
+    centro3 = Vetor3D(0, 1, 0);
+    up3 = Vetor3D(0,1,0);
+    gluLookAt(olho3.x,olho3.y,olho3.z, centro3.x,centro3.y,centro3.z, up3.x,up3.y,up3.z);
+    displayInner();
+
+    if (posSelecionado >= 0 && posSelecionado < (int)objetos.size()) {
+        objetos[posSelecionado]->t.x += glutGUI::dtx;
+        objetos[posSelecionado]->t.y += glutGUI::dty;
+        objetos[posSelecionado]->t.z += glutGUI::dtz;
+
+        objetos[posSelecionado]->a.x += glutGUI::dax;
+        objetos[posSelecionado]->a.y += glutGUI::day;
+        objetos[posSelecionado]->a.z += glutGUI::daz;
+
+        objetos[posSelecionado]->s.x += glutGUI::dsx;
+        objetos[posSelecionado]->s.y += glutGUI::dsy;
+        objetos[posSelecionado]->s.z += glutGUI::dsz;
+    }
+
+    GUI::displayEnd();
+}
+
+void desenhaSemViewPorts() {
     GUI::displayInit();
 
     glMatrixMode(GL_MODELVIEW);
@@ -268,16 +326,117 @@ void desenha() {
         objetos[posSelecionado]->s.z += glutGUI::dsz;
     }
 
+    // picking
+    else if (pontoSelecionado != 0 and pontoSelecionado <= objetos.size()) {
+        objetos[pontoSelecionado-1]->t.x += glutGUI::dtx;
+        objetos[pontoSelecionado-1]->t.y += glutGUI::dty;
+        objetos[pontoSelecionado-1]->t.z += glutGUI::dtz;
+
+        objetos[pontoSelecionado-1]->a.x += glutGUI::dax;
+        objetos[pontoSelecionado-1]->a.y += glutGUI::day;
+        objetos[pontoSelecionado-1]->a.z += glutGUI::daz;
+
+        objetos[pontoSelecionado-1]->s.x += glutGUI::dsx;
+        objetos[pontoSelecionado-1]->s.y += glutGUI::dsy;
+        objetos[pontoSelecionado-1]->s.z += glutGUI::dsz;
+    }
+    // picking
+
     GUI::displayEnd();
 }
 
+bool mostrarViewPorts = false;
+
+void desenha() {
+    if (mostrarViewPorts) {
+        desenhaComViewPorts();
+    } else {
+        desenhaSemViewPorts();
+    }
+}
+
 bool incluirObjeto = false;
+
+void desenhaPontosDeControle()
+{
+    for (size_t i=0; i < objetos.size(); i++) {
+        if (i == pontoSelecionado - 1) {
+            GUI::setColor(1,1,1,1,true);
+        } else {
+            GUI::setColor(0,0,1,1,true);
+        }
+
+        glPushName(i+1);
+            objetos[i]->desenha();
+        glPopName();
+    }
+
+    //teste triangulo
+    glBegin(GL_TRIANGLES);
+        glNormal3f(0,0,1); //definir a normal permite ver as cores mais vivas ao posicionar a iluminacao adequadamente
+        GUI::setColor(1,1,1);
+        glVertex3f(0,0,1);
+        GUI::setColor(0,0,1,0.0);
+        glVertex3f(2,0,1);
+        GUI::setColor(0,1,0,0.0);
+        glVertex3f(0,2,1);
+    glEnd();
+    //teste triangulo usando glColor (sem iluminacao)
+    glDisable(GL_LIGHTING);
+    glBegin(GL_TRIANGLES);
+        glNormal3f(0,0,1);
+        glColor4f(0,1,0,1);
+        glVertex3f(-1,2,1);
+        glColor4f(0,0,1,1);
+        glVertex3f(-3,0,1);
+        glColor4f(1,1,1,0);
+        glVertex3f(-1,0,1);
+    glEnd();
+    glEnable(GL_LIGHTING);
+}
+
+int picking( GLint cursorX, GLint cursorY, int w, int h ) {
+    int BUFSIZE = 512;
+    GLuint selectBuf[512];
+    GUI::pickingInit(cursorX,cursorY,w,h,selectBuf,BUFSIZE);
+    GUI::displayInit();
+    desenhaPontosDeControle();
+    return GUI::pickingClosestName(selectBuf,BUFSIZE);
+}
+
+void mouse(int button, int state, int x, int y) {
+    GUI::mouseButtonInit(button,state,x,y);
+
+    // if the left button is pressed
+    if (button == GLUT_LEFT_BUTTON) {
+        // when the button is pressed
+        if (state == GLUT_DOWN) {
+            //picking
+            int pick = picking( x, y, 5, 5 );
+            if (pick != 0) {
+                pontoSelecionado = pick;
+                glutGUI::lbpressed = false;
+            }
+        }
+    }
+}
 
 void teclado(unsigned char key, int x, int y) {
     if (!incluirObjeto) {
         GUI::keyInit(key,x,y);
     }
     switch (key) {
+    case 'w': /* troca de perspectiva para ortográfica */
+        glutGUI::perspective = !glutGUI::perspective;
+        break;
+    case 'e': /* remove sombra dos objetos */
+        if (posSelecionado >= 0 and posSelecionado < (int)objetos.size()) {
+            objetos[posSelecionado]->mostrarSombra();
+        }
+        break;
+    case 'y': /* Habilita view ports*/
+        mostrarViewPorts = !mostrarViewPorts;
+        break;
     case 's':
         selecionadoMostrarSombra = !selecionadoMostrarSombra;
         break;
@@ -399,34 +558,6 @@ void teclado(unsigned char key, int x, int y) {
     case '!':
         loadFromFile("objetos_final.txt");
         break;
-//    case 'i':
-//        //glutGUI::tx = 0.0;
-//        //glutGUI::ty = 0.0;
-//        //glutGUI::tz = 0.0;
-//        //glutGUI::ax = 0.0;
-//        //glutGUI::ay = 0.0;
-//        //glutGUI::az = 0.0;
-//        //glutGUI::sx = 1.0;
-//        //glutGUI::sy = 1.0;
-//        //glutGUI::sz = 1.0;
-//        //glutGUI::lx = 0.0;
-//        //glutGUI::ly = 0.0;
-//        //glutGUI::lz = 0.0;
-//        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
-//            objetos[posSelecionado]->t.x = 0.0;
-//            objetos[posSelecionado]->t.y = 0.0;
-//            objetos[posSelecionado]->t.z = 0.0;
-
-//            objetos[posSelecionado]->a.x += glutGUI::dax;
-//            objetos[posSelecionado]->a.y += glutGUI::day;
-//            objetos[posSelecionado]->a.z += glutGUI::daz;
-
-//            objetos[posSelecionado]->s.x += glutGUI::dsx;
-//            objetos[posSelecionado]->s.y += glutGUI::dsy;
-//            objetos[posSelecionado]->s.z += glutGUI::dsz;
-//        }
-//        break;
-
     default:
         break;
     }
@@ -434,5 +565,5 @@ void teclado(unsigned char key, int x, int y) {
 
 int main()
 {
-    GUI gui = GUI(2000,1000,desenha,teclado);
+    GUI gui = GUI(2000,1000,desenha,teclado, mouse, "COLHEITA FELIZ V3.27 PRO");
 }

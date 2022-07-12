@@ -5,6 +5,8 @@ int glutGUI::height = 300;
 
 bool glutGUI::perspective = true;
 
+bool glutGUI::picking = false;
+
 bool glutGUI::lbpressed = false;
 bool glutGUI::mbpressed = false;
 bool glutGUI::rbpressed = false;
@@ -22,8 +24,8 @@ Axis glutGUI::axis = AXIS_Y;
 int glutGUI::nIterations = 10;
 
 
-int glutGUI::slices = 200; //400;//16;
-int glutGUI::stacks = 200; //400;//16;
+int glutGUI::slices = 50; //400;//16;
+int glutGUI::stacks = 50; //400;//16;
 
 int glutGUI::posCam = 0;
 
@@ -32,7 +34,7 @@ bool glutGUI::enabled_light[8] = {true,true,true,true,true,true,true,false};
 bool glutGUI::hidden_light[8] = {false,false,false,false,false,false,false,false};
 bool glutGUI::pontual_light[8] = {true,true,true,true,true,true,true,true};
 bool glutGUI::spot_light[8] = {false,false,false,false,false,false,false,false};
-float glutGUI::spot_angle = 25.0;
+float glutGUI::spot_angle = 5.0;
 bool glutGUI::trans_luz = false;
 
 bool glutGUI::obj_transp = false;
@@ -340,7 +342,7 @@ void glutGUI::idle()
     glutPostRedisplay();
 }
 
-void glutGUI::mouseButton(int button, int state, int x, int y) {
+void glutGUI::defaultMouseButton(int button, int state, int x, int y) {
     dtx = 0.0; dty = 0.0; dtz = 0.0;
     dax = 0.0; day = 0.0; daz = 0.0;
     dsx = 0.0; dsy = 0.0; dsz = 0.0;
