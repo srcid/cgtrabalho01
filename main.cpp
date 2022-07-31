@@ -152,12 +152,12 @@ void mostrarSombrasNosPlanos() {
     // parede lateral
     GUI::setColor(138.0/255, 89.0/255, 6.0/255);
     glPushMatrix();
-        glTranslatef(2,0,0);
+        glTranslatef(3,0,0);
         glRotatef(90, 0,0,1);
         glScalef(2,2,2);
         GUI::drawQuad();
     glPopMatrix();
-    GLfloat plano2[4] = {-1,0,0, 2.00-0.001};
+    GLfloat plano2[4] = {-1,0,0, 3.00-0.001};
     mostraSombras(plano2, lightPos);
 
     // parede frontal
